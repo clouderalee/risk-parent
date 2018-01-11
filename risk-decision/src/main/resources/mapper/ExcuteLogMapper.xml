@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cangoonline.riskdecision.mapper.ExcuteLogMapper">
+
+    <insert id="saveRiskModelExcuteLog"
+            parameterType="com.cangoonline.riskdecision.entity.RiskModelExcuteLog">
+        INSERT INTO t_crd_engineflow_log (
+            relativeId,
+            seqNo,
+            setpName,
+            `input`,
+            `output`,
+            `result`,
+            inputDate,
+            updateDate,
+            code,
+            message
+        ) VALUES (
+            #{relativeId},
+            #{seqNo},
+            #{setpName},
+            #{input},
+            #{output},
+            #{result},
+            #{inputDate},
+            #{updateDate},
+            #{code},
+            #{message}
+        )
+    </insert>
+
+</mapper>

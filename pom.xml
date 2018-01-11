@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cangoonline</groupId>
+    <artifactId>risk-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>disruptor</module>
+        <module>engineflow</module>
+        <module>risk-decision</module>
+        <module>risk-common-all</module>
+        <module>risk-common</module>
+        <module>risk-email</module>
+        <module>risk-sms</module>
+        <module>risk-sftp</module>
+        <module>risk-redis</module>
+        <module>risk-pdf</module>
+        <module>risk-excel</module>
+        <module>risk-rabbitmq</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>4.3.3.RELEASE</spring.version>
+        <junit.version>4.12</junit.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- commons -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <!-- 日志 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.31</version>
+        </dependency>
+
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+    </dependencies>
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profile.dataSource.driverClassName>com.mysql.jdbc.Driver</profile.dataSource.driverClassName>
+                <profile.dataSource.jdbcUrl>jdbc:mysql://192.168.11.3:3306/risk-decision</profile.dataSource.jdbcUrl>
+                <profile.dataSource.username>root</profile.dataSource.username>
+                <profile.dataSource.password>cango1qaz</profile.dataSource.password>
+                <profile.dataSource.idleConnectionTestPeriod>25000</profile.dataSource.idleConnectionTestPeriod>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <profile.dataSource.driverClassName>com.mysql.jdbc.Driver</profile.dataSource.driverClassName>
+                <profile.dataSource.jdbcUrl>jdbc:mysql://192.168.11.3:3306/risk-decision</profile.dataSource.jdbcUrl>
+                <profile.dataSource.username>root</profile.dataSource.username>
+                <profile.dataSource.password>cango1qaz</profile.dataSource.password>
+                <profile.dataSource.idleConnectionTestPeriod>25000</profile.dataSource.idleConnectionTestPeriod>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profile.dataSource.driverClassName>com.mysql.jdbc.Driver</profile.dataSource.driverClassName>
+                <profile.dataSource.jdbcUrl>jdbc:mysql://192.168.1.19:3306/risk-decision</profile.dataSource.jdbcUrl>
+                <profile.dataSource.username>cango2</profile.dataSource.username>
+                <profile.dataSource.password>cango1qaz</profile.dataSource.password>
+                <profile.dataSource.idleConnectionTestPeriod>25000</profile.dataSource.idleConnectionTestPeriod>
+            </properties>
+        </profile>
+    </profiles>
+</project>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cangoonline.riskdecision.mapper.TaskMapper" >
+
+
+    <insert id="saveTaskObject"
+            parameterType="com.cangoonline.riskdecision.entity.TaskObject">
+        INSERT into t_crd_task (
+        id,
+        transactionNo,
+        businessNo,
+        serviceCode,
+        channel,
+        taskStatus,
+        consumeTimes,
+        publishTimes,
+        inputDate,
+        updateDate,
+        resultCode,
+        resultMessage,
+        taskType
+        ) values (
+        #{ id },
+        #{ transactionNo },
+        #{ businessNo },
+        #{ serviceCode },
+        #{ channel },
+        #{ taskStatus },
+        #{ consumeTimes },
+        #{ publishTimes },
+        #{ inputDate },
+        #{ updateDate },
+        #{ resultCode },
+        #{ resultMessage },
+        #{ taskType }
+        )
+    </insert>
+
+    <select id="getTaskObjectById"
+            resultType="com.cangoonline.riskdecision.entity.TaskObject">
+        SELECT
+            id,
+            transactionNo,
+            businessNo,
+            serviceCode,
+            channel,
+            taskStatus,
+            consumeTimes,
+            publishTimes,
+            inputDate,
+            updateDate,
+            resultCode,
+            resultMessage,
+            taskType
+        FROM t_crd_task
+        WHERE id = #{id}
+
+    </select>
+
+    <update id="updateTaskObject"
+            parameterType="com.cangoonline.riskdecision.entity.TaskObject">
+        UPDATE t_crd_task
+        <set>
+            <if test="transactionNo != null">
+                transactionNo = #{transactionNo},
+            </if>
+            <if test="businessNo != null">
+                businessNo = #{businessNo},
+            </if>
+            <if test="serviceCode != null">
+                serviceCode = #{serviceCode},
+            </if>
+            <if test="channel != null">
+                channel = #{channel},
+            </if>
+            <if test="taskStatus != null">
+                taskStatus = #{taskStatus},
+            </if>
+            <if test="consumeTimes != null">
+                consumeTimes = #{consumeTimes},
+            </if>
+            <if test="publishTimes != null">
+                publishTimes = #{publishTimes},
+            </if>
+            <if test="inputDate != null">
+                inputDate = #{inputDate},
+            </if>
+            <if test="updateDate != null">
+                updateDate = #{updateDate},
+            </if>
+            <if test="resultCode != null">
+                resultCode = #{resultCode},
+            </if>
+            <if test="resultMessage != null">
+                resultMessage = #{resultMessage},
+            </if>
+            <if test="taskType != null">
+                taskType = #{taskType}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <update id="updateTaskStatusById" >
+        UPDATE t_crd_task SET taskStatus = #{taskStatus} WHERE id = #{taskId}
+    </update>
+
+
+    <!-- 关联数据部分 -->
+    <insert id="saveRelativeData"
+            parameterType="com.cangoonline.riskdecision.entity.RelativeData">
+        INSERT INTO t_crd_data (
+            relativeId,
+            `data`,
+            `type`
+        ) VALUES (
+            #{relativeId},
+            #{data},
+            #{type}
+        )
+    </insert>
+
+    <select id="getRelativeData"
+            resultType="com.cangoonline.riskdecision.entity.RelativeData">
+        select id,relativeId,`data`,`type` from t_crd_data
+        where relativeId = #{taskId} and `type` = #{type}
+    </select>
+
+    <select id="getRiskDecisionTaskData"
+            resultType="com.cangoonline.riskdecision.entity.RelativeData">
+        select id,relativeId,`data`,`type` from t_crd_data
+        where relativeId = #{taskId} and `type` = 1
+    </select>
+    <select id="getRiskDecisionResultData"
+            resultType="com.cangoonline.riskdecision.entity.RelativeData">
+        select id,relativeId,`data`,`type` from t_crd_data
+        where relativeId = #{taskId} and `type` = 2
+    </select>
+    <select id="getResultNotifyDataDtoByTranscationNo" parameterType="java.lang.String"
+            resultType="com.cangoonline.riskdecision.mapper.dto.ResultNotifyDataDto">
+        select t.id,
+            t.businessNo,
+            t.transactionNo,
+            t.channel,
+            t.serviceCode,
+            t.taskStatus,
+            t.resultCode,
+            t.resultMessage,
+            d.`data`,
+            n.notifyUrl as notifyAddress
+        from t_crd_task t
+        left join t_crd_data d on d.relativeId = t.id and d.type = 2
+        left join t_crd_notify_address n on n.channel = t.channel and t.serviceCode = t.serviceCode
+        where t.transactionNo = #{transcationNo}
+    </select>
+    <select id="getResultNotifyDataDtoByTaskId" parameterType="java.lang.String"
+            resultType="com.cangoonline.riskdecision.mapper.dto.ResultNotifyDataDto">
+        select t.id,
+            t.businessNo,
+            t.transactionNo,
+            t.channel,
+            t.serviceCode,
+            t.taskStatus,
+            t.resultCode,
+            t.resultMessage,
+            d.`data`,
+            n.notifyUrl as notifyAddress
+        from t_crd_task t
+        left join t_crd_data d on d.relativeId = t.id and d.type = 2
+        left join t_crd_notify_address n on n.channel = t.channel and t.serviceCode = t.serviceCode
+        where t.id = #{taskId}
+    </select>
+
+
+    <select id="getNotifyAddress" resultType="java.lang.String" parameterType="java.lang.String">
+        select notifyUrl from t_crd_notify_address where channel=#{channel} and serviceCode=#{serviceCode}
+    </select>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	   default-autowire="byType">
+
+
+	<!--redis集群配置-->
+	<!-- redis连接池的配置 -->
+	<bean name="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+		<property name="maxWaitMillis" value="-1" />
+		<property name="maxTotal" value="1000" />
+		<property name="maxIdle" value="100" />
+		<property name="minIdle" value="8" />
+	</bean>
+	<bean id="jedisCluster" class="com.cangoonline.risk.common.JedisClusterFactory">
+		<property name="addressList">
+			<list>
+				<value>192.168.11.4:7001</value>
+				<value>192.168.11.4:7002</value>
+				<value>192.168.11.4:7003</value>
+				<value>192.168.11.4:7004</value>
+				<value>192.168.11.4:7005</value>
+				<value>192.168.11.4:7006</value>
+			</list>
+		</property>
+		<!-- 属性文件里 key的前缀 -->
+		<property name="addressResourceKeyPrefix" value="address" />
+		<!-- 连接超时时间，单位毫秒 -->
+		<property name="timeout" value="#{3*1000}" />
+		<property name="maxRedirections" value="6" />
+		<property name="genericObjectPoolConfig" ref="genericObjectPoolConfig" />
+	</bean>
+
+	<!--单个redis配置-->
+	<!-- redis连接池的配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="1000"/>
+		<property name="minIdle" value="100"/>
+		<property name="testOnBorrow" value="true"/>
+		<property name="testOnReturn" value="true"/>
+	</bean>
+	<!-- redis的连接池pool，不是必选项：timeout/password -->
+	<bean id = "jedisFactory" class="com.cangoonline.risk.common.JedisFactory">
+		<constructor-arg index="0" ref="jedisPoolConfig"/><!--config-->
+		<constructor-arg index="1" value="192.168.11.4"/><!--host-->
+		<constructor-arg index="2" value="7001" type="int"/><!--port -->
+		<constructor-arg index="3" value="#{3*1000}" type="int"/> <!-- timeout -->
+		<constructor-arg index="4" value="123456"/> <!-- password -->
+	</bean>
+
+</beans>

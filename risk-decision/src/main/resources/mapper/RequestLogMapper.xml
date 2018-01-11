@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cangoonline.riskdecision.mapper.RequestLogMapper" >
+
+    <insert id="saveRiskDecisionRequest"
+            parameterType="com.cangoonline.riskdecision.entity.RiskDecisionRequest" >
+        INSERT INTO t_crd_apply_log (
+        id,
+        transactionNo,
+        businessNo,
+        serviceCode,
+        channel,
+        requestJson,
+        responseJson,
+        code,
+        message,
+        requestDate,
+        responseDate,
+        requestUri,
+        requestIp,
+        consumeTime
+        ) values (
+        #{ id },
+        #{ transactionNo },
+        #{ businessNo },
+        #{ serviceCode },
+        #{ channel },
+        #{ requestJson },
+        #{ responseJson },
+        #{ code },
+        #{ message },
+        #{ requestDate },
+        #{ responseDate },
+        #{ requestUri },
+        #{ requestIp },
+        #{ consumeTime }
+        )
+    </insert>
+
+    <update id="updateRiskDecisionRequest"
+            parameterType="com.cangoonline.riskdecision.entity.RiskDecisionRequest" >
+        UPDATE t_crd_apply_log
+        <set>
+            <if test="transactionNo != null">
+                transactionNo = #{transactionNo},
+            </if>
+            <if test="businessNo != null">
+                businessNo = #{businessNo},
+            </if>
+            <if test="serviceCode != null">
+                serviceCode = #{serviceCode},
+            </if>
+            <if test="channel != null">
+                channel = #{channel},
+            </if>
+            <if test="requestJson != null">
+                requestJson = #{requestJson},
+            </if>
+            <if test="responseJson != null">
+                responseJson = #{responseJson},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="message != null">
+                message = #{message},
+            </if>
+            <if test="requestDate != null">
+                requestDate = #{requestDate},
+            </if>
+            <if test="responseDate != null">
+                responseDate = #{responseDate},
+            </if>
+            <if test="requestUri != null">
+                requestUri = #{requestUri},
+            </if>
+            <if test="requestIp != null">
+                requestIp = #{requestIp},
+            </if>
+            <if test="consumeTime != null">
+                consumeTime = #{consumeTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<engine>
+
+	<!-- 初始化全局参数 -->
+	<properties> 
+		<property name="beanType" value="reflect" /><!--reflect-->
+		<property name="varProcessor" value="emptyVariableProcessor" />
+		<property name="logProcessor" value="riskDecisionExcuteLogProcessor" />
+	</properties>
+	
+	<!-- 初始化一些公用的Bean对象 -->
+	<beans>
+		<bean id="OpenScoringModelActuator" class="com.cangoonline.riskdecision.flows.jpmml.OpenScoringModelActuator" describe="GBTM梯度模型"/>
+		<bean id="AutoApproveModelActuator" class="com.cangoonline.riskdecision.flows.smg3.AutoApproveModelActuator" describe="自动审批模型" />
+
+		<bean id="emptyVariableProcessor" class="com.cangoonline.engineflow.EmptyVariableProcessor" describe="默认模型参数变量处理器" />
+		<bean id="openscoringModelVariableProcessor" class="com.cangoonline.riskdecision.flows.OpenscoringModelVariableProcessor" describe="Openscoring模型执行的变量处理器" />
+		<bean id="riskDecisionExcuteLogProcessor" class="com.cangoonline.riskdecision.flows.RiskDecisionExcuteLogProcessor" describe="模型执行日志处理器" />
+	</beans>
+	
+	<services>
+		<service channel="ERP" serviceCode="crd0001" name="openscoringService" describe="openscoring模型服务" isValid="true" >
+			<flow id="1" bean="OpenScoringModelActuator" varProcessor="openscoringModelVariableProcessor"
+				  name="OpenScoringModelActuator" describe="GBDT模型服务调用">
+				<property name="modelFilePath" value="classpath:models/pmml/all_BR_SJS_2_vs_1_less_feature.pmml"/>
+			</flow>
+		</service>
+
+		<service channel="ERP" serviceCode="crd0002" name="AutoApproveService" describe="smg3自动审批模型服务" isValid="true" >
+			<flow id="1" bean="AutoApproveModelActuator" name="AAMAIN_smg3Service" describe="自动审批SMG3模型">
+				<property name="aliasName" value="AAMAIN"/>
+				<property name="signatureName" value="CANGO"/>
+				<property name="inAreaName" value="OINPUT"/>
+				<property name="outAreaName" value="OOUTPUT"/>
+			</flow>
+		</service>
+
+		<service channel="ERP" serviceCode="crd1001" logProcessor="defaultVariableProcessor" describe="自动审批服务" isValid="true" >
+			<flow id="1" bean="OpenScoringModelActuator" varProcessor="openscoringModelVariableProcessor"
+				  name="GBDTM_OpenscoringService" describe="GBDT模型服务调用">
+				<property name="modelFilePath" value="classpath:models/pmml/all_BR_SJS_2_vs_1_less_feature.pmml"/>
+			</flow>
+			<flow id="2" bean="AutoApproveModelActuator" describe="自动审批SMG3模型">
+				<property name="aliasName" value="AAMAIN"/>
+				<property name="signatureName" value="CANGO"/>
+				<property name="inAreaName" value="OINPUT"/>
+				<property name="outAreaName" value="OOUTPUT"/>
+			</flow>
+		</service>
+
+	</services>
+</engine>

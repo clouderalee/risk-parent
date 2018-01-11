@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.mxhichina.com" /><!-- 服务器 -->
+        <property name="port" value="25" /><!-- 端口号 -->
+        <property name="username" value="fintech@cangoonline.com" /><!-- 用户名 -->
+        <property name="password" value="cangoZHU1234" /><!--  密码   -->
+        <property name="javaMailProperties"><!-- SMTP服务器验证 -->
+            <props>
+                <prop key="mail.smtp.auth">true</prop><!-- 验证身份 -->
+            </props>
+        </property>
+    </bean>
+    <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="fintech@cangoonline.com" /><!-- 发件人email -->
+    </bean>
+    <bean id="emailService" class="com.cangoonline.risk.service.impl.EmailServiceImpl">
+        <property name="mailSender" ref="mailSender" />
+        <property name="simpleMailMessage" ref="simpleMailMessage" />
+    </bean>
+
+</beans>
